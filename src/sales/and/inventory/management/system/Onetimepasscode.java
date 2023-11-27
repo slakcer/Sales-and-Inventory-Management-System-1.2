@@ -54,14 +54,14 @@ public class Onetimepasscode extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
 
-        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel1.setBackground(new java.awt.Color(204, 204, 204));
 
         jLabel2.setBackground(new java.awt.Color(255, 0, 255));
         jLabel2.setFont(new java.awt.Font("Roboto", 1, 24)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(0, 0, 51));
         jLabel2.setText("Enter one time passcode");
 
-        Resetpass.setBackground(new java.awt.Color(0, 0, 51));
+        Resetpass.setBackground(new java.awt.Color(207, 124, 6));
         Resetpass.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
         Resetpass.setForeground(new java.awt.Color(255, 255, 255));
         Resetpass.setText("Verify OTP");

@@ -101,9 +101,9 @@ public class SearchPOS extends javax.swing.JFrame {
         setUndecorated(true);
         setResizable(false);
 
-        panelBorder1.setBackground(new java.awt.Color(102, 255, 204));
+        panelBorder1.setBackground(new java.awt.Color(204, 204, 204));
 
-        panelBorder2.setBackground(new java.awt.Color(0, 0, 51));
+        panelBorder2.setBackground(new java.awt.Color(20, 30, 86));
 
         jLabel1.setFont(new java.awt.Font("Roboto", 0, 36)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
@@ -165,7 +165,7 @@ public class SearchPOS extends javax.swing.JFrame {
             }
         });
 
-        Search.setBackground(new java.awt.Color(0, 0, 51));
+        Search.setBackground(new java.awt.Color(207, 124, 6));
         Search.setFont(new java.awt.Font("Roboto", 0, 27)); // NOI18N
         Search.setForeground(new java.awt.Color(255, 255, 255));
         Search.setText("Search");

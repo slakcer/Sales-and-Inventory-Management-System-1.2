@@ -5,19 +5,17 @@
 package sales.and.inventory.management.system;
 
 import java.awt.Color;
-import java.awt.HeadlessException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import javax.swing.JOptionPane;
 
 /**
  *
  * @author juanm
  */
-public class AddToga extends javax.swing.JFrame {
+public class DeleteProvider extends javax.swing.JFrame {
     private static final String username = JDBC.username;
     private static final String password = JDBC.password;
     private static final String dataConn = JDBC.dataConn;
@@ -27,29 +25,33 @@ public class AddToga extends javax.swing.JFrame {
     PreparedStatement pst2 = null, pst3 = null;
     ResultSet rs=null, rs2=null,rs3=null;
     /**
-     * Creates new form AddToga
+     * Creates new form DeleteProvider
      */
-    public AddToga() {
+    public DeleteProvider() {
         initComponents();
         JDBC db = new JDBC();
         db.Connect();
-        getSchool();
+        getProvider();
         setBackground(new Color(0,0,0,0));
     }
-    public final void getSchool(){
+    
+    public final void getProvider(){
             try {
             sqlConn = DriverManager.getConnection(dataConn, username, password);
-            pst = sqlConn.prepareStatement("SELECT ScName FROM school_client");
+            pst = sqlConn.prepareStatement("SELECT ProviderName FROM provider");
             rs = pst.executeQuery();
             while (rs.next()) {
-                String bnk = rs.getString("ScName");
-                SchoolNameCombo.addItem(bnk);
+                String bnk = rs.getString("ProviderName");
+                ProviderName.addItem(bnk);
             }
         } catch (Exception e) {
             java.util.logging.Logger.getLogger(SalesAndInventoryManagementSystem.class.getName()).log(java.util.logging.Level.SEVERE, null, e);
             JOptionPane.showMessageDialog(this, "Please contact your admin for assistance.");
         }
     }
+
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -61,48 +63,27 @@ public class AddToga extends javax.swing.JFrame {
 
         panelBorder1 = new swing.PanelBorder();
         jLabel4 = new javax.swing.JLabel();
-        SchoolNameCombo = new javax.swing.JComboBox<>();
-        jLabel7 = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        TogaDescription = new javax.swing.JTextArea();
-        jLabel6 = new javax.swing.JLabel();
-        TogaStock = new javax.swing.JTextField();
+        ProviderName = new javax.swing.JComboBox<>();
         Cancel = new javax.swing.JButton();
-        SaveChanges = new javax.swing.JButton();
+        Delete = new javax.swing.JButton();
         panelBorder2 = new swing.PanelBorder();
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
-        setResizable(false);
 
         panelBorder1.setBackground(new java.awt.Color(204, 204, 204));
 
         jLabel4.setFont(new java.awt.Font("Roboto", 0, 24)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(0, 0, 51));
-        jLabel4.setText("School Name");
+        jLabel4.setText("Provider Name");
 
-        SchoolNameCombo.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
-        SchoolNameCombo.addMouseListener(new java.awt.event.MouseAdapter() {
+        ProviderName.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
+        ProviderName.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                SchoolNameComboMouseClicked(evt);
+                ProviderNameMouseClicked(evt);
             }
         });
-
-        jLabel7.setFont(new java.awt.Font("Roboto", 0, 24)); // NOI18N
-        jLabel7.setForeground(new java.awt.Color(0, 0, 51));
-        jLabel7.setText("Toga Description");
-
-        TogaDescription.setColumns(20);
-        TogaDescription.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
-        TogaDescription.setRows(5);
-        jScrollPane1.setViewportView(TogaDescription);
-
-        jLabel6.setFont(new java.awt.Font("Roboto", 0, 24)); // NOI18N
-        jLabel6.setForeground(new java.awt.Color(0, 0, 51));
-        jLabel6.setText("Stock");
-
-        TogaStock.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
 
         Cancel.setBackground(new java.awt.Color(204, 204, 204));
         Cancel.setFont(new java.awt.Font("Roboto", 0, 27)); // NOI18N
@@ -120,19 +101,19 @@ public class AddToga extends javax.swing.JFrame {
             }
         });
 
-        SaveChanges.setBackground(new java.awt.Color(207, 124, 6));
-        SaveChanges.setFont(new java.awt.Font("Roboto", 0, 27)); // NOI18N
-        SaveChanges.setForeground(new java.awt.Color(255, 255, 255));
-        SaveChanges.setText("Add");
-        SaveChanges.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        SaveChanges.addMouseListener(new java.awt.event.MouseAdapter() {
+        Delete.setBackground(new java.awt.Color(207, 124, 6));
+        Delete.setFont(new java.awt.Font("Roboto", 0, 27)); // NOI18N
+        Delete.setForeground(new java.awt.Color(255, 255, 255));
+        Delete.setText("Delete");
+        Delete.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        Delete.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                SaveChangesMouseClicked(evt);
+                DeleteMouseClicked(evt);
             }
         });
-        SaveChanges.addActionListener(new java.awt.event.ActionListener() {
+        Delete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                SaveChangesActionPerformed(evt);
+                DeleteActionPerformed(evt);
             }
         });
 
@@ -140,23 +121,23 @@ public class AddToga extends javax.swing.JFrame {
 
         jLabel1.setFont(new java.awt.Font("Roboto", 0, 36)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setText("Add Toga");
+        jLabel1.setText("Delete Provider");
 
         javax.swing.GroupLayout panelBorder2Layout = new javax.swing.GroupLayout(panelBorder2);
         panelBorder2.setLayout(panelBorder2Layout);
         panelBorder2Layout.setHorizontalGroup(
             panelBorder2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelBorder2Layout.createSequentialGroup()
-                .addGap(159, 159, 159)
+                .addGap(122, 122, 122)
                 .addComponent(jLabel1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(124, Short.MAX_VALUE))
         );
         panelBorder2Layout.setVerticalGroup(
             panelBorder2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelBorder2Layout.createSequentialGroup()
-                .addGap(23, 23, 23)
+                .addGap(22, 22, 22)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(27, Short.MAX_VALUE))
+                .addContainerGap(28, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout panelBorder1Layout = new javax.swing.GroupLayout(panelBorder1);
@@ -164,46 +145,34 @@ public class AddToga extends javax.swing.JFrame {
         panelBorder1Layout.setHorizontalGroup(
             panelBorder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelBorder1Layout.createSequentialGroup()
-                .addGroup(panelBorder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(panelBorder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addGroup(panelBorder1Layout.createSequentialGroup()
-                        .addGap(60, 60, 60)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(Cancel)
                         .addGap(18, 18, 18)
-                        .addComponent(SaveChanges))
+                        .addComponent(Delete))
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, panelBorder1Layout.createSequentialGroup()
-                        .addGap(16, 16, 16)
+                        .addGap(17, 17, 17)
                         .addGroup(panelBorder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLabel6)
-                            .addComponent(jLabel7)
+                            .addComponent(ProviderName, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabel4)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 483, Short.MAX_VALUE)
-                            .addComponent(SchoolNameCombo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(TogaStock)
                             .addComponent(panelBorder2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addContainerGap(28, Short.MAX_VALUE))
+                .addContainerGap(21, Short.MAX_VALUE))
         );
         panelBorder1Layout.setVerticalGroup(
             panelBorder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelBorder1Layout.createSequentialGroup()
-                .addGap(14, 14, 14)
+                .addGap(23, 23, 23)
                 .addComponent(panelBorder2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(26, 26, 26)
+                .addGap(31, 31, 31)
                 .addComponent(jLabel4)
-                .addGap(13, 13, 13)
-                .addComponent(SchoolNameCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jLabel7)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel6)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(TogaStock, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(35, 35, 35)
+                .addComponent(ProviderName, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
                 .addGroup(panelBorder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(SaveChanges, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(Cancel, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(36, Short.MAX_VALUE))
+                    .addComponent(Cancel, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(Delete, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(15, 15, 15))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -214,24 +183,16 @@ public class AddToga extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panelBorder1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(panelBorder1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void SaveChangesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_SaveChangesMouseClicked
-
-        dispose();
-    }//GEN-LAST:event_SaveChangesMouseClicked
-
-    private void SaveChangesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SaveChangesActionPerformed
-        addToga();
-        TogaDescription.setText("");
-        TogaStock.setText("");
-        Main.updateToga();
-    }//GEN-LAST:event_SaveChangesActionPerformed
+    private void ProviderNameMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ProviderNameMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_ProviderNameMouseClicked
 
     private void CancelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_CancelMouseClicked
 
@@ -242,54 +203,80 @@ public class AddToga extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_CancelActionPerformed
 
-    private void SchoolNameComboMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_SchoolNameComboMouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_SchoolNameComboMouseClicked
-    public void addToga(){
-         try {
-            String School = (String) SchoolNameCombo.getSelectedItem();
-            sqlConn = DriverManager.getConnection(dataConn, username, password);
-            pst = sqlConn.prepareStatement("SELECT * FROM school_client WHERE ScName = ?");
-            pst.setString(1, School);
-            rs = pst.executeQuery();
-            while (rs.next()) {
-                String ID = rs.getString("ScID");
+    private void DeleteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_DeleteMouseClicked
+        
+        dispose();
+    }//GEN-LAST:event_DeleteMouseClicked
+
+    private void DeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeleteActionPerformed
+        deleteProvider();
+        Main.updateProvider();
+    }//GEN-LAST:event_DeleteActionPerformed
+
+    
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(DeleteProvider.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(DeleteProvider.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(DeleteProvider.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(DeleteProvider.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new DeleteProvider().setVisible(true);
+            }
+        });
+    }
+    
+    public void deleteProvider(){
+        int p = JOptionPane.showConfirmDialog(null, "Do you really want to delete", "Delete", JOptionPane.YES_NO_OPTION);
+        if (p == 0) {
+            String name = (String) ProviderName.getSelectedItem();
             try {
                 sqlConn = DriverManager.getConnection(dataConn, username, password);
-                pst = sqlConn.prepareStatement("Insert into toga(TogaDescription, TogaStock, ScID) values (?,?,?)");
-                pst.setString(1, TogaDescription.getText());
-                pst.setInt(2, Integer.parseInt(TogaStock.getText()));
-                pst.setInt(3, Integer.parseInt(ID));
+                pst = sqlConn.prepareStatement("DELETE FROM provider WHERE ProviderName = ? ");
+                pst.setString(1, name);
+                pst.executeUpdate();
                 pst.execute();
 
 
-                JOptionPane.showMessageDialog(rootPane, "Added!");
+                JOptionPane.showMessageDialog(rootPane, "Deleted!");
                 sqlConn.close();
+                dispose();
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(rootPane, e);
 
             } 
-        
-            }
-            
-            
-        } catch (Exception e) {
-            java.util.logging.Logger.getLogger(SalesAndInventoryManagementSystem.class.getName()).log(java.util.logging.Level.SEVERE, null, e);
-            JOptionPane.showMessageDialog(this, "Please contact your admin for assistance.");
-        }  
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Cancel;
-    private javax.swing.JButton SaveChanges;
-    private javax.swing.JComboBox<String> SchoolNameCombo;
-    private javax.swing.JTextArea TogaDescription;
-    private javax.swing.JTextField TogaStock;
+    private javax.swing.JButton Delete;
+    private javax.swing.JComboBox<String> ProviderName;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JScrollPane jScrollPane1;
     private swing.PanelBorder panelBorder1;
     private swing.PanelBorder panelBorder2;
     // End of variables declaration//GEN-END:variables

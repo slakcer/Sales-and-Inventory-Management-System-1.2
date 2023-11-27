@@ -50,6 +50,9 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import javax.swing.*;
 import java.awt.*;
+import javax.swing.plaf.UIResource;
+import javax.swing.table.TableCellRenderer;
+
 
 
 
@@ -77,6 +80,7 @@ public class Main extends javax.swing.JFrame {
     JDBC db = new JDBC();
     generateReceipt g = new generateReceipt();
     generateReports r = new generateReports();
+
     
 
 
@@ -95,6 +99,7 @@ public class Main extends javax.swing.JFrame {
         db.Connect();
         updateInventory();
         updateCategory();
+        updateProvider();
         updateSchools();
         updateBanks(); 
         getUserInfo();
@@ -111,6 +116,7 @@ public class Main extends javax.swing.JFrame {
         generateSalesReportFolder();
         generateSalesandInventoryDocumentsFolder();
         generateTapeReceiptFolder();      
+        
         try {        
             ShowYear(); 
         } catch (Exception e) {
@@ -282,6 +288,7 @@ public class Main extends javax.swing.JFrame {
             BankTable.fixTable(jScrollPane6);
             BankTable.fixTable(jScrollPane1);
             BankTable.fixTable(jScrollPane9);
+            BankTable.fixTable(jScrollPane11);
             BankTable.fixTable(jScrollPane7);
             BankTable.fixTable(jScrollPane10);
             BankTable.fixTable(jScrollPane4);
@@ -327,7 +334,7 @@ public class Main extends javax.swing.JFrame {
          try
         { 
             sqlConn = DriverManager.getConnection(dataConn,username,password);
-            pst = sqlConn.prepareStatement("SELECT * from product P INNER JOIN product_category C WHERE P.CaID = C.CaID");
+            pst = sqlConn.prepareStatement("SELECT * from product P INNER JOIN product_category C, provider R WHERE P.CaID = C.CaID AND P.ProvID = R.ProvID");
             
             rs =pst.executeQuery();
             ResultSetMetaData StData = rs.getMetaData();          
@@ -347,8 +354,9 @@ public class Main extends javax.swing.JFrame {
                     columnData.add(rs.getString("C.CaDescription"));
                     columnData.add(rs.getString("P.PrCost"));
                     columnData.add(rs.getString("P.PrUnitPrice"));
-                    columnData.add(rs.getString("P.PrVAT"));
-                    columnData.add(rs.getString("P.PrStock"));            
+                    columnData.add(rs.getString("P.PrStock"));   
+                    columnData.add(rs.getString("R.ProviderName"));
+                    columnData.add(rs.getString("P.PrDateReceived"));
                 }
                     Inventory.addRow(columnData);                               
             }
@@ -389,13 +397,52 @@ public class Main extends javax.swing.JFrame {
         } 
         
     }
+        
+        public static final void updateProvider()
+    {
+         try
+        { 
+            sqlConn = DriverManager.getConnection(dataConn,username,password);
+            pst = sqlConn.prepareStatement("SELECT * from provider");        
+            rs =pst.executeQuery();
+            ResultSetMetaData StData = rs.getMetaData();
+            
+            int q = StData.getColumnCount();           
+            DefaultTableModel Provider = (DefaultTableModel)ProviderTable.getModel();
+            DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+            centerRenderer.setHorizontalAlignment(JLabel.CENTER );
+            ProviderTable.setDefaultRenderer(Object.class, centerRenderer);
+            Provider.setRowCount(0);           
+            while(rs.next()){              
+                Vector columnData = new Vector();            
+                for (int i = 1; i <= q; i++)
+                {                   
+                    columnData.add(rs.getString("ProvID"));
+                    columnData.add(rs.getString("ProviderName"));
+                    columnData.add(rs.getString("ProviderAddress"));
+                }
+                    Provider.addRow(columnData);                              
+            }
+         
+        }
+        catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, ex);
+        } 
+        
+    }
         private static final DecimalFormat decfor = new DecimalFormat("0.00"); 
-        public final void  getSales(){
+                public final void  getSales(){
          try
          { 
-            String dat, strTotalVAT, strNetIncome, date;
+            
+            String dat, strTotalVAT, strNetIncome, date, SalesSystemDate, Today;
+            java.util.Date d = new java.util.Date(); 
+            SimpleDateFormat s = new SimpleDateFormat("yyyy-MM-dd");
+            Today = s.format(d);
+            SalesSystemDate = Today;
             ArrayList list = new ArrayList();
             sqlConn = DriverManager.getConnection(dataConn,username,password);
+            
             double TotalVAT = 0, NetIncome;
             int TotalCost=0, TotalAmount=0, TotalPenalties=0, TotalLosses=0, TotalRental=0, count=0;
             pst = sqlConn.prepareStatement("SELECT OrDate FROM orders GROUP BY OrDate");
@@ -417,7 +464,7 @@ public class Main extends javax.swing.JFrame {
                     list.add(date);                      
                     }
                 }
-                if(!list.contains(dat)&&!dat.equals(SystemDate)){
+                if(!list.contains(dat)&&!dat.equals(SalesSystemDate)){
                 pst2 = sqlConn.prepareStatement("SELECT SUM(OrLessVAT) FROM orders WHERE Ordate = '"+dat+"'");        
                 rs2 =pst2.executeQuery();
                 if(rs2.next()){
@@ -450,7 +497,7 @@ public class Main extends javax.swing.JFrame {
                 if(rs6.next()){
                     TotalLosses = rs6.getInt(1);               
                 }
-                NetIncome = (TotalAmount+TotalPenalties) - (TotalCost+TotalLosses+TotalVAT);
+                NetIncome = (TotalAmount+TotalPenalties) - (TotalCost+TotalLosses);
                 strTotalVAT = decfor.format(TotalVAT);
                 strNetIncome = decfor.format(NetIncome);
                 pst7.setInt(1, TotalAmount);
@@ -721,7 +768,20 @@ public class Main extends javax.swing.JFrame {
         g2d.fillRect(0, 0, width, height);
         }
     }
-     
+    public class CustomHeaderRenderer extends DefaultTableCellRenderer {
+
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value,
+                boolean isSelected, boolean hasFocus, int row, int column) {
+
+            JLabel label = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            label.setHorizontalAlignment(JLabel.CENTER );
+            // Customize the font for the header
+            label.setFont(label.getFont().deriveFont(Font.BOLD, 14)); // Change the font size and style as needed
+            return label;
+        }
+    }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -790,11 +850,11 @@ public class Main extends javax.swing.JFrame {
         MostSold = new javax.swing.JLabel();
         LeastSold = new javax.swing.JLabel();
         MonthSold = new javax.swing.JLabel();
-        MostProductSold = new javax.swing.JLabel();
-        MostProductSoldCount = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jLabel34 = new javax.swing.JLabel();
         jLabel30 = new javax.swing.JLabel();
+        MostProductSoldCount = new javax.swing.JLabel();
+        MostProductSold = new javax.swing.JLabel();
         panelBorder5 = new swing.PanelBorder();
         jPanel1 = new javax.swing.JPanel();
         HighStock = new javax.swing.JLabel();
@@ -862,7 +922,10 @@ public class Main extends javax.swing.JFrame {
         DeleteCategory = new javax.swing.JButton();
         jScrollPane9 = new javax.swing.JScrollPane();
         CategoryTable = new swing.Table();
-        jLabel25 = new javax.swing.JLabel();
+        AddProvider = new javax.swing.JButton();
+        DeleteProvider = new javax.swing.JButton();
+        jScrollPane11 = new javax.swing.JScrollPane();
+        ProviderTable = new swing.Table();
         BusinessP = new javax.swing.JPanel();
         BusinessName = new TextField(" ");
         jLabel48 = new javax.swing.JLabel();
@@ -1357,6 +1420,11 @@ public class Main extends javax.swing.JFrame {
 
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sales/and/inventory/management/system/icons/dashboard.png"))); // NOI18N
+        jLabel1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel1MouseClicked(evt);
+            }
+        });
 
         jLabel2.setFont(new java.awt.Font("Bahnschrift", 0, 12)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
@@ -1452,7 +1520,7 @@ public class Main extends javax.swing.JFrame {
 
         DashboardP.setBackground(new java.awt.Color(255, 255, 255));
 
-        panelBorder4.setBackground(new java.awt.Color(207, 124, 6));
+        panelBorder4.setBackground(new java.awt.Color(248, 165, 47));
         panelBorder4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         LeastProductSold.setBackground(new java.awt.Color(0, 0, 0));
@@ -1485,19 +1553,7 @@ public class Main extends javax.swing.JFrame {
         MonthSold.setText("December");
         panelBorder4.add(MonthSold, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 110, -1, -1));
 
-        MostProductSold.setBackground(new java.awt.Color(0, 0, 0));
-        MostProductSold.setFont(new java.awt.Font("Bahnschrift", 0, 24)); // NOI18N
-        MostProductSold.setForeground(new java.awt.Color(0, 0, 0));
-        MostProductSold.setText("Sando");
-        panelBorder4.add(MostProductSold, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 230, -1, -1));
-
-        MostProductSoldCount.setBackground(new java.awt.Color(0, 0, 0));
-        MostProductSoldCount.setFont(new java.awt.Font("Bahnschrift", 0, 24)); // NOI18N
-        MostProductSoldCount.setForeground(new java.awt.Color(0, 0, 0));
-        MostProductSoldCount.setText("16 Items");
-        panelBorder4.add(MostProductSoldCount, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 290, -1, -1));
-
-        jPanel2.setBackground(new java.awt.Color(207, 124, 6));
+        jPanel2.setBackground(new java.awt.Color(248, 165, 47));
         jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel34.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sales/and/inventory/management/system/icons/products.png"))); // NOI18N
@@ -1508,12 +1564,24 @@ public class Main extends javax.swing.JFrame {
         jLabel30.setText("Top Product Sold");
         jPanel2.add(jLabel30, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 30, 200, 27));
 
+        MostProductSoldCount.setBackground(new java.awt.Color(0, 0, 0));
+        MostProductSoldCount.setFont(new java.awt.Font("Bahnschrift", 0, 24)); // NOI18N
+        MostProductSoldCount.setForeground(new java.awt.Color(0, 0, 0));
+        MostProductSoldCount.setText("16 Items");
+        jPanel2.add(MostProductSoldCount, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 270, -1, -1));
+
+        MostProductSold.setBackground(new java.awt.Color(0, 0, 0));
+        MostProductSold.setFont(new java.awt.Font("Bahnschrift", 0, 24)); // NOI18N
+        MostProductSold.setForeground(new java.awt.Color(0, 0, 0));
+        MostProductSold.setText("Sando");
+        jPanel2.add(MostProductSold, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 210, -1, -1));
+
         panelBorder4.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, 460));
 
-        panelBorder5.setBackground(new java.awt.Color(213, 158, 1));
+        panelBorder5.setBackground(new java.awt.Color(254, 200, 44));
         panelBorder5.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jPanel1.setBackground(new java.awt.Color(213, 158, 1));
+        jPanel1.setBackground(new java.awt.Color(254, 200, 44));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         HighStock.setBackground(new java.awt.Color(0, 0, 0));
@@ -1568,10 +1636,10 @@ public class Main extends javax.swing.JFrame {
 
         panelBorder5.add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 6, 340, 540));
 
-        panelBorder6.setBackground(new java.awt.Color(250, 131, 35));
+        panelBorder6.setBackground(new java.awt.Color(253, 201, 159));
         panelBorder6.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jPanel3.setBackground(new java.awt.Color(250, 131, 35));
+        jPanel3.setBackground(new java.awt.Color(253, 201, 159));
         jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         MostSchoolRents.setBackground(new java.awt.Color(0, 0, 0));
@@ -1656,6 +1724,7 @@ public class Main extends javax.swing.JFrame {
 
         CategoryP1.setBackground(new java.awt.Color(255, 255, 255));
 
+        BankTable.getTableHeader().setDefaultRenderer(new CustomHeaderRenderer());
         BankTable.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         BankTable.setForeground(new java.awt.Color(0, 0, 0));
         BankTable.setModel(new javax.swing.table.DefaultTableModel(
@@ -2109,6 +2178,7 @@ public class Main extends javax.swing.JFrame {
 
         panelBorder17.setBackground(new java.awt.Color(255, 255, 255));
 
+        POSTable.getTableHeader().setDefaultRenderer(new CustomHeaderRenderer());
         POSTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -2253,6 +2323,7 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
+        CategoryTable.getTableHeader().setDefaultRenderer(new CustomHeaderRenderer());
         CategoryTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -2265,7 +2336,7 @@ public class Main extends javax.swing.JFrame {
                 java.lang.Integer.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                true, false
+                false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -2277,9 +2348,79 @@ public class Main extends javax.swing.JFrame {
             }
         });
         CategoryTable.setFont(new java.awt.Font("Bahnschrift", 0, 12)); // NOI18N
+        CategoryTable.getTableHeader().setReorderingAllowed(false);
         jScrollPane9.setViewportView(CategoryTable);
+        if (CategoryTable.getColumnModel().getColumnCount() > 0) {
+            CategoryTable.getColumnModel().getColumn(0).setResizable(false);
+            CategoryTable.getColumnModel().getColumn(1).setResizable(false);
+        }
 
-        jLabel25.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/category.png"))); // NOI18N
+        AddProvider.setBackground(new java.awt.Color(207, 124, 6));
+        AddProvider.setFont(new java.awt.Font("Bahnschrift", 0, 24)); // NOI18N
+        AddProvider.setForeground(new java.awt.Color(255, 255, 255));
+        AddProvider.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sales/and/inventory/management/system/icons/plus.png"))); // NOI18N
+        AddProvider.setText("Add Provider");
+        AddProvider.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        AddProvider.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                AddProviderMouseClicked(evt);
+            }
+        });
+        AddProvider.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                AddProviderActionPerformed(evt);
+            }
+        });
+
+        DeleteProvider.setBackground(new java.awt.Color(207, 124, 6));
+        DeleteProvider.setFont(new java.awt.Font("Bahnschrift", 0, 24)); // NOI18N
+        DeleteProvider.setForeground(new java.awt.Color(255, 255, 255));
+        DeleteProvider.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sales/and/inventory/management/system/icons/bin.png"))); // NOI18N
+        DeleteProvider.setText("Delete Provider");
+        DeleteProvider.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        DeleteProvider.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                DeleteProviderMouseClicked(evt);
+            }
+        });
+        DeleteProvider.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                DeleteProviderActionPerformed(evt);
+            }
+        });
+
+        ProviderTable.getTableHeader().setDefaultRenderer(new CustomHeaderRenderer());
+        ProviderTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Provider ID", "Name", "Address"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        ProviderTable.setFont(new java.awt.Font("Bahnschrift", 0, 12)); // NOI18N
+        ProviderTable.getTableHeader().setReorderingAllowed(false);
+        jScrollPane11.setViewportView(ProviderTable);
+        if (ProviderTable.getColumnModel().getColumnCount() > 0) {
+            ProviderTable.getColumnModel().getColumn(0).setResizable(false);
+            ProviderTable.getColumnModel().getColumn(1).setResizable(false);
+            ProviderTable.getColumnModel().getColumn(2).setResizable(false);
+        }
 
         javax.swing.GroupLayout CategoryPLayout = new javax.swing.GroupLayout(CategoryP);
         CategoryP.setLayout(CategoryPLayout);
@@ -2291,13 +2432,16 @@ public class Main extends javax.swing.JFrame {
                     .addGroup(CategoryPLayout.createSequentialGroup()
                         .addComponent(AddCategory)
                         .addGap(18, 18, 18)
-                        .addComponent(DeleteCategory)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(DeleteCategory))
+                    .addComponent(jScrollPane9, javax.swing.GroupLayout.PREFERRED_SIZE, 550, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 61, Short.MAX_VALUE)
+                .addGroup(CategoryPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane11, javax.swing.GroupLayout.PREFERRED_SIZE, 550, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(CategoryPLayout.createSequentialGroup()
-                        .addComponent(jScrollPane9, javax.swing.GroupLayout.PREFERRED_SIZE, 654, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 149, Short.MAX_VALUE)
-                        .addComponent(jLabel25)
-                        .addGap(122, 122, 122))))
+                        .addComponent(AddProvider)
+                        .addGap(18, 18, 18)
+                        .addComponent(DeleteProvider)))
+                .addContainerGap(20, Short.MAX_VALUE))
         );
         CategoryPLayout.setVerticalGroup(
             CategoryPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -2305,14 +2449,13 @@ public class Main extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(CategoryPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(AddCategory, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(DeleteCategory, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGroup(CategoryPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(CategoryPLayout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(jScrollPane9, javax.swing.GroupLayout.PREFERRED_SIZE, 610, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(CategoryPLayout.createSequentialGroup()
-                        .addGap(177, 177, 177)
-                        .addComponent(jLabel25)))
+                    .addComponent(DeleteCategory, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(AddProvider, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(DeleteProvider, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(CategoryPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane9, javax.swing.GroupLayout.PREFERRED_SIZE, 610, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane11, javax.swing.GroupLayout.PREFERRED_SIZE, 610, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(74, Short.MAX_VALUE))
         );
 
@@ -2665,6 +2808,7 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
+        TogaTable.getTableHeader().setDefaultRenderer(new CustomHeaderRenderer());
         TogaTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -2790,6 +2934,7 @@ public class Main extends javax.swing.JFrame {
             .addGap(0, 0, Short.MAX_VALUE)
         );
 
+        OrderTable.getTableHeader().setDefaultRenderer(new CustomHeaderRenderer());
         OrderTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -2918,6 +3063,7 @@ public class Main extends javax.swing.JFrame {
 
         panelBorder27.setBackground(new java.awt.Color(255, 255, 255));
 
+        SchoolTable.getTableHeader().setDefaultRenderer(new CustomHeaderRenderer());
         SchoolTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -2941,7 +3087,7 @@ public class Main extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        SchoolTable.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
+        SchoolTable.setFont(new java.awt.Font("Bahnschrift", 0, 12)); // NOI18N
         jScrollPane4.setViewportView(SchoolTable);
         if (SchoolTable.getColumnModel().getColumnCount() > 0) {
             SchoolTable.getColumnModel().getColumn(0).setResizable(false);
@@ -3034,14 +3180,14 @@ public class Main extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ID", "Barcode", "Product Name", "Category", "Cost", "Unit Price", "VAT", "Stock"
+                "ID", "Barcode", "Product Name", "Category", "Cost", "Unit Price", "Stock", "Provider", "Date Received"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Object.class, java.lang.Object.class
+                java.lang.Integer.class, java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                true, false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -3053,7 +3199,28 @@ public class Main extends javax.swing.JFrame {
             }
         });
         InventoryTable.setFont(new java.awt.Font("Bahnschrift", 0, 12)); // NOI18N
+        InventoryTable.getTableHeader().setDefaultRenderer(new CustomHeaderRenderer());
         jScrollPane3.setViewportView(InventoryTable);
+        if (InventoryTable.getColumnModel().getColumnCount() > 0) {
+            InventoryTable.getColumnModel().getColumn(0).setResizable(false);
+            InventoryTable.getColumnModel().getColumn(1).setResizable(false);
+            InventoryTable.getColumnModel().getColumn(2).setResizable(false);
+            InventoryTable.getColumnModel().getColumn(3).setResizable(false);
+            InventoryTable.getColumnModel().getColumn(4).setResizable(false);
+            InventoryTable.getColumnModel().getColumn(5).setResizable(false);
+            InventoryTable.getColumnModel().getColumn(6).setResizable(false);
+            InventoryTable.getColumnModel().getColumn(7).setResizable(false);
+            InventoryTable.getColumnModel().getColumn(8).setResizable(false);
+        }
+        InventoryTable.getColumnModel().getColumn(0).setPreferredWidth(100);
+        InventoryTable.getColumnModel().getColumn(1).setPreferredWidth(100);
+        InventoryTable.getColumnModel().getColumn(2).setPreferredWidth(225);
+        InventoryTable.getColumnModel().getColumn(3).setPreferredWidth(150);
+        InventoryTable.getColumnModel().getColumn(4).setPreferredWidth(100);
+        InventoryTable.getColumnModel().getColumn(5).setPreferredWidth(100);
+        InventoryTable.getColumnModel().getColumn(6).setPreferredWidth(100);
+        InventoryTable.getColumnModel().getColumn(7).setPreferredWidth(200);
+        InventoryTable.getColumnModel().getColumn(8).setPreferredWidth(150);
 
         AddProduct.setBackground(new java.awt.Color(207, 124, 6));
         AddProduct.setFont(new java.awt.Font("Bahnschrift", 0, 20)); // NOI18N
@@ -3435,7 +3602,7 @@ public class Main extends javax.swing.JFrame {
         ViewOrders1.setFont(new java.awt.Font("Bahnschrift", 0, 24)); // NOI18N
         ViewOrders1.setForeground(new java.awt.Color(255, 255, 255));
         ViewOrders1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sales/and/inventory/management/system/icons/pencil.png"))); // NOI18N
-        ViewOrders1.setText("Generate Official Receipt");
+        ViewOrders1.setText("Generate Payment Record");
         ViewOrders1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         ViewOrders1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -3494,6 +3661,7 @@ public class Main extends javax.swing.JFrame {
             .addGap(0, 0, Short.MAX_VALUE)
         );
 
+        InvoiceTable.getTableHeader().setDefaultRenderer(new CustomHeaderRenderer());
         InvoiceTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -3517,7 +3685,7 @@ public class Main extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        InvoiceTable.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
+        InvoiceTable.setFont(new java.awt.Font("Bahnschrift", 0, 12)); // NOI18N
         jScrollPane2.setViewportView(InvoiceTable);
         if (InvoiceTable.getColumnModel().getColumnCount() > 0) {
             InvoiceTable.getColumnModel().getColumn(0).setResizable(false);
@@ -3543,7 +3711,7 @@ public class Main extends javax.swing.JFrame {
                         .addComponent(ViewOrders1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(DeleteProduct4, javax.swing.GroupLayout.PREFERRED_SIZE, 272, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 59, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
                 .addGroup(ContractsPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, ContractsPLayout.createSequentialGroup()
                         .addComponent(jLabel31, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -3556,11 +3724,12 @@ public class Main extends javax.swing.JFrame {
             ContractsPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(ContractsPLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(ContractsPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(ViewOrders, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(ViewOrders1, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(DeleteProduct4, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(Search2, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(ContractsPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(Search2, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(ContractsPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(ViewOrders, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(ViewOrders1, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(DeleteProduct4, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelBorder33, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(ContractsPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -3581,7 +3750,7 @@ public class Main extends javax.swing.JFrame {
             panelBorder3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelBorder3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(MainPanel))
+                .addComponent(MainPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
         );
         panelBorder3Layout.setVerticalGroup(
             panelBorder3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -3611,7 +3780,7 @@ public class Main extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(panelBorder9, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(panelBorder3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addComponent(panelBorder3, javax.swing.GroupLayout.PREFERRED_SIZE, 716, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -3991,7 +4160,8 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_DeleteOrderActionPerformed
 
     private void DeleteCategoryMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_DeleteCategoryMouseClicked
-        // TODO add your handling code here:
+        DeleteCategory show = new DeleteCategory();
+        show.setVisible(true);
     }//GEN-LAST:event_DeleteCategoryMouseClicked
 
     private void DeleteCategoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeleteCategoryActionPerformed
@@ -4375,6 +4545,29 @@ public class Main extends javax.swing.JFrame {
         r.generateInventoryReport();
         JOptionPane.showMessageDialog(frame, "Inventory Report Generated!");
     }//GEN-LAST:event_GenerateInventoryReport1ActionPerformed
+
+    private void jLabel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jLabel1MouseClicked
+
+    private void AddProviderMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_AddProviderMouseClicked
+        AddProvider show = new AddProvider();
+        show.setVisible(true); 
+    }//GEN-LAST:event_AddProviderMouseClicked
+
+    private void AddProviderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddProviderActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_AddProviderActionPerformed
+
+    private void DeleteProviderMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_DeleteProviderMouseClicked
+        DeleteProvider show = new DeleteProvider();
+        show.setVisible(true);
+    }//GEN-LAST:event_DeleteProviderMouseClicked
+
+    private void DeleteProviderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeleteProviderActionPerformed
+        DeleteProvider show = new DeleteProvider();
+        show.setVisible(true);
+    }//GEN-LAST:event_DeleteProviderActionPerformed
         public static void generateOfficialReceiptFolder(){
             try
         {   
@@ -5118,6 +5311,7 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JButton AddCategory;
     private javax.swing.JButton AddProduct;
     private javax.swing.JButton AddProduct1;
+    private javax.swing.JButton AddProvider;
     private javax.swing.JButton AddSchool;
     private javax.swing.JButton AddStock;
     private javax.swing.JButton AddTogaStock;
@@ -5153,6 +5347,7 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JButton DeleteProduct;
     private javax.swing.JButton DeleteProduct1;
     private javax.swing.JButton DeleteProduct4;
+    private javax.swing.JButton DeleteProvider;
     private javax.swing.JButton DeleteSchool;
     private javax.swing.JButton EditOrder;
     private javax.swing.JButton EditProduct;
@@ -5197,6 +5392,7 @@ public class Main extends javax.swing.JFrame {
     private static swing.Table POSTable;
     private javax.swing.JLabel Page;
     private javax.swing.JTextField PhoneNumber;
+    private static swing.Table ProviderTable;
     private static javax.swing.JTextArea ReceiptPreview;
     private javax.swing.JButton ReportLoss;
     private javax.swing.JButton ResetOrder;
@@ -5248,7 +5444,6 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel24;
-    private javax.swing.JLabel jLabel25;
     private javax.swing.JLabel jLabel26;
     private javax.swing.JLabel jLabel27;
     private javax.swing.JLabel jLabel28;
@@ -5291,6 +5486,7 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane10;
+    private javax.swing.JScrollPane jScrollPane11;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;

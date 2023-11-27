@@ -95,7 +95,7 @@ public class EditInvoice extends javax.swing.JFrame {
         setUndecorated(true);
         setResizable(false);
 
-        panelBorder1.setBackground(new java.awt.Color(102, 255, 204));
+        panelBorder1.setBackground(new java.awt.Color(204, 204, 204));
         panelBorder1.setForeground(new java.awt.Color(102, 255, 204));
 
         jLabel4.setFont(new java.awt.Font("Roboto", 0, 24)); // NOI18N
@@ -188,7 +188,7 @@ public class EditInvoice extends javax.swing.JFrame {
             }
         });
 
-        Generate.setBackground(new java.awt.Color(0, 0, 51));
+        Generate.setBackground(new java.awt.Color(207, 124, 6));
         Generate.setFont(new java.awt.Font("Roboto", 0, 27)); // NOI18N
         Generate.setForeground(new java.awt.Color(255, 255, 255));
         Generate.setText("Generate");
@@ -204,7 +204,7 @@ public class EditInvoice extends javax.swing.JFrame {
             }
         });
 
-        panelBorder2.setBackground(new java.awt.Color(0, 0, 51));
+        panelBorder2.setBackground(new java.awt.Color(20, 30, 86));
 
         jLabel1.setFont(new java.awt.Font("Roboto", 0, 36)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));

@@ -103,8 +103,9 @@ public class AddContract2 extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
         setResizable(false);
+        setSize(new java.awt.Dimension(638, 383));
 
-        panelBorder1.setBackground(new java.awt.Color(102, 255, 204));
+        panelBorder1.setBackground(new java.awt.Color(204, 204, 204));
 
         jLabel4.setFont(new java.awt.Font("Roboto", 0, 24)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(0, 0, 51));
@@ -149,7 +150,7 @@ public class AddContract2 extends javax.swing.JFrame {
             }
         });
 
-        AddItem.setBackground(new java.awt.Color(0, 0, 51));
+        AddItem.setBackground(new java.awt.Color(207, 124, 6));
         AddItem.setFont(new java.awt.Font("Roboto", 0, 27)); // NOI18N
         AddItem.setForeground(new java.awt.Color(255, 255, 255));
         AddItem.setText("Add Item");
@@ -165,7 +166,7 @@ public class AddContract2 extends javax.swing.JFrame {
             }
         });
 
-        AddItem1.setBackground(new java.awt.Color(0, 0, 51));
+        AddItem1.setBackground(new java.awt.Color(207, 124, 6));
         AddItem1.setFont(new java.awt.Font("Roboto", 0, 27)); // NOI18N
         AddItem1.setForeground(new java.awt.Color(255, 255, 255));
         AddItem1.setText("Delete");
@@ -181,7 +182,7 @@ public class AddContract2 extends javax.swing.JFrame {
             }
         });
 
-        CreateInvoice.setBackground(new java.awt.Color(0, 0, 51));
+        CreateInvoice.setBackground(new java.awt.Color(207, 124, 6));
         CreateInvoice.setFont(new java.awt.Font("Roboto", 0, 27)); // NOI18N
         CreateInvoice.setForeground(new java.awt.Color(255, 255, 255));
         CreateInvoice.setText("Create Invoice");
@@ -213,7 +214,7 @@ public class AddContract2 extends javax.swing.JFrame {
             }
         });
 
-        panelBorder2.setBackground(new java.awt.Color(0, 0, 51));
+        panelBorder2.setBackground(new java.awt.Color(20, 30, 86));
 
         jLabel1.setFont(new java.awt.Font("Roboto", 0, 36)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));

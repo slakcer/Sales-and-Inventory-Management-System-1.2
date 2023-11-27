@@ -60,7 +60,7 @@ public class DeleteItem extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
 
-        panelBorder1.setBackground(new java.awt.Color(102, 255, 204));
+        panelBorder1.setBackground(new java.awt.Color(204, 204, 204));
 
         jLabel4.setFont(new java.awt.Font("Roboto", 0, 24)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(0, 0, 51));
@@ -94,7 +94,7 @@ public class DeleteItem extends javax.swing.JFrame {
             }
         });
 
-        Delete.setBackground(new java.awt.Color(0, 0, 51));
+        Delete.setBackground(new java.awt.Color(207, 124, 6));
         Delete.setFont(new java.awt.Font("Roboto", 0, 27)); // NOI18N
         Delete.setForeground(new java.awt.Color(255, 255, 255));
         Delete.setText("Delete");
@@ -110,7 +110,7 @@ public class DeleteItem extends javax.swing.JFrame {
             }
         });
 
-        panelBorder2.setBackground(new java.awt.Color(0, 0, 51));
+        panelBorder2.setBackground(new java.awt.Color(20, 30, 86));
 
         jLabel1.setFont(new java.awt.Font("Roboto", 0, 36)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));

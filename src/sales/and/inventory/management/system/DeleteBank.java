@@ -24,6 +24,7 @@ public class DeleteBank extends javax.swing.JFrame {
     PreparedStatement pst = null;
     PreparedStatement pst2 = null, pst3 = null;
     ResultSet rs=null, rs2=null,rs3=null;
+    Color borderColor = new Color(13, 20, 57);
     /**
      * Creates new form DeleteBank
      */
@@ -60,8 +61,7 @@ public class DeleteBank extends javax.swing.JFrame {
     private void initComponents() {
 
         panelBorder1 = new swing.PanelBorder();
-        jLabel4 = new javax.swing.JLabel();
-        BName = new javax.swing.JComboBox<>();
+        BName = new Combobox<>("Bank name");
         Cancel = new javax.swing.JButton();
         Delete = new javax.swing.JButton();
         panelBorder2 = new swing.PanelBorder();
@@ -70,13 +70,9 @@ public class DeleteBank extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
 
-        panelBorder1.setBackground(new java.awt.Color(102, 255, 204));
+        panelBorder1.setBackground(new java.awt.Color(255, 255, 255));
 
-        jLabel4.setFont(new java.awt.Font("Roboto", 0, 24)); // NOI18N
-        jLabel4.setForeground(new java.awt.Color(0, 0, 51));
-        jLabel4.setText("Bank Name");
-
-        BName.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
+        BName.setFont(new java.awt.Font("Bahnschrift", 0, 14)); // NOI18N
         BName.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 BNameMouseClicked(evt);
@@ -88,9 +84,9 @@ public class DeleteBank extends javax.swing.JFrame {
             }
         });
 
-        Cancel.setBackground(new java.awt.Color(204, 204, 204));
-        Cancel.setFont(new java.awt.Font("Roboto", 0, 27)); // NOI18N
-        Cancel.setForeground(new java.awt.Color(0, 0, 51));
+        Cancel.setBackground(new java.awt.Color(207, 124, 6));
+        Cancel.setFont(new java.awt.Font("Bahnschrift", 0, 18)); // NOI18N
+        Cancel.setForeground(new java.awt.Color(255, 255, 255));
         Cancel.setText("Cancel");
         Cancel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         Cancel.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -104,8 +100,8 @@ public class DeleteBank extends javax.swing.JFrame {
             }
         });
 
-        Delete.setBackground(new java.awt.Color(0, 0, 51));
-        Delete.setFont(new java.awt.Font("Roboto", 0, 27)); // NOI18N
+        Delete.setBackground(new java.awt.Color(207, 124, 6));
+        Delete.setFont(new java.awt.Font("Bahnschrift", 0, 18)); // NOI18N
         Delete.setForeground(new java.awt.Color(255, 255, 255));
         Delete.setText("Delete");
         Delete.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -120,9 +116,10 @@ public class DeleteBank extends javax.swing.JFrame {
             }
         });
 
-        panelBorder2.setBackground(new java.awt.Color(0, 0, 51));
+        panelBorder2.setBackground(new java.awt.Color(20, 30, 86));
+        panelBorder2.setPreferredSize(new java.awt.Dimension(309, 100));
 
-        jLabel1.setFont(new java.awt.Font("Roboto", 0, 36)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Bahnschrift", 0, 36)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("Delete Bank");
 
@@ -131,58 +128,55 @@ public class DeleteBank extends javax.swing.JFrame {
         panelBorder2Layout.setHorizontalGroup(
             panelBorder2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelBorder2Layout.createSequentialGroup()
-                .addContainerGap(147, Short.MAX_VALUE)
+                .addGap(61, 61, 61)
                 .addComponent(jLabel1)
-                .addGap(145, 145, 145))
+                .addGap(63, 63, 63))
         );
         panelBorder2Layout.setVerticalGroup(
             panelBorder2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelBorder2Layout.createSequentialGroup()
-                .addGap(21, 21, 21)
+                .addGap(25, 25, 25)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(29, Short.MAX_VALUE))
+                .addContainerGap(25, Short.MAX_VALUE))
         );
+
+        panelBorder1.setBorder(new RoundedBorder(20, borderColor));
 
         javax.swing.GroupLayout panelBorder1Layout = new javax.swing.GroupLayout(panelBorder1);
         panelBorder1.setLayout(panelBorder1Layout);
         panelBorder1Layout.setHorizontalGroup(
             panelBorder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelBorder1Layout.createSequentialGroup()
-                .addGroup(panelBorder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                .addGap(30, 30, 30)
+                .addGroup(panelBorder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(panelBorder1Layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(Cancel)
                         .addGap(18, 18, 18)
                         .addComponent(Delete))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, panelBorder1Layout.createSequentialGroup()
-                        .addGap(27, 27, 27)
-                        .addGroup(panelBorder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(BName, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel4)
-                            .addComponent(panelBorder2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addContainerGap(39, Short.MAX_VALUE))
+                    .addGroup(panelBorder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(panelBorder2, javax.swing.GroupLayout.DEFAULT_SIZE, 319, Short.MAX_VALUE)
+                        .addComponent(BName, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap(30, Short.MAX_VALUE))
         );
         panelBorder1Layout.setVerticalGroup(
             panelBorder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelBorder1Layout.createSequentialGroup()
-                .addGap(18, 18, 18)
+                .addGap(20, 20, 20)
                 .addComponent(panelBorder2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(28, 28, 28)
-                .addComponent(jLabel4)
-                .addGap(18, 18, 18)
-                .addComponent(BName, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 88, Short.MAX_VALUE)
+                .addGap(40, 40, 40)
+                .addComponent(BName, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(40, 40, 40)
                 .addGroup(panelBorder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(Cancel, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(Delete, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(62, 62, 62))
+                    .addComponent(Cancel)
+                    .addComponent(Delete))
+                .addContainerGap(30, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panelBorder1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(panelBorder1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -247,7 +241,6 @@ public class DeleteBank extends javax.swing.JFrame {
     private javax.swing.JButton Cancel;
     private javax.swing.JButton Delete;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel4;
     private swing.PanelBorder panelBorder1;
     private swing.PanelBorder panelBorder2;
     // End of variables declaration//GEN-END:variables

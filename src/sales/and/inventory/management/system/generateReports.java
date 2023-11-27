@@ -54,7 +54,6 @@ public class generateReports {
         sqlConn = DriverManager.getConnection(dataConn,username,password);
         int PrID=0, count=0, PrStock=0, PrUnitPrice=0, PrCost=0, PrTotalValue=0, GrandTotalValue=0;
         String PrName=null, CaDescription=null,BuName=null, BuEmail=null,BuTIN=null, BuAddress=null, OrTime=null, strOrID=null;
-        float VAT=0, VATableSales=0;
         String struserID = Integer.toString(userID);
         pst = sqlConn.prepareStatement("SELECT * FROM business_info"); 
         rs = pst.executeQuery();
@@ -93,9 +92,7 @@ public class generateReports {
         Paragraph line = new Paragraph("------------------------------------------------------------------------------------------", lineFont);
         Paragraph newline = new Paragraph("\n",newlineFont);
         Paragraph BusinessName = new Paragraph(PrName,title);
-        BusinessName.setAlignment(Element.ALIGN_CENTER);
-        Paragraph BusinessTIN = new Paragraph("VAT REG TIN: "+BuTIN,title);      
-        BusinessTIN.setAlignment(Element.ALIGN_CENTER);
+        BusinessName.setAlignment(Element.ALIGN_CENTER);     
         Paragraph BusinessEmail = new Paragraph(BuEmail,title);
         BusinessEmail.setAlignment(Element.ALIGN_CENTER);
         Paragraph BusinessAddress = new Paragraph(BuAddress+"\nDAN R. PEL - Prop.",title);
@@ -142,8 +139,7 @@ public class generateReports {
         InventoryReport.add(image);
         InventoryReport.add(BusinessName); 
         InventoryReport.add(BusinessAddress);
-        InventoryReport.add(BusinessEmail); 
-        InventoryReport.add(BusinessTIN); 
+        InventoryReport.add(BusinessEmail);  
         InventoryReport.add(PaInventoryReport);
         InventoryReport.add(newline);
         InventoryReport.add(UserDetails);
@@ -207,7 +203,7 @@ public class generateReports {
         sqlConn = DriverManager.getConnection(dataConn,username,password);
         int SalesGrossIncome=0, SalesTotalLoss=0, SalesTotalCost=0, SalesTotalPenalties=0, OrTotalAmount=0,OrCostTotal=0,OrID=0, GrandGrossIncome=0, GrandRentalGrossIncome=0, GrandPenalties=0,GrandCost=0,GrandLosses=0;
         String PrName=null, CaDescription=null,BuName=null, BuEmail=null,BuTIN=null, BuAddress=null, OrTime=null, strOrID=null, SalesDate=null, strDate=null, FileName;
-        float SalesTotalVAT=0, SalesNetIncome=0, OrVAT=0, OrNet_of_VAT=0, OrNetIncome=0, GrandVAT=0, GrandNet=0;
+        float SalesNetIncome=0, OrNetIncome=0, GrandNet=0;
         
         String struserID = Integer.toString(userID);
         pst = sqlConn.prepareStatement("SELECT * FROM business_info"); 
@@ -265,8 +261,6 @@ public class generateReports {
         Paragraph newline = new Paragraph("\n",newlineFont);
         Paragraph BusinessName = new Paragraph(BuName,title);
         BusinessName.setAlignment(Element.ALIGN_CENTER);
-        Paragraph BusinessTIN = new Paragraph("VAT REG TIN: "+BuTIN,title);      
-        BusinessTIN.setAlignment(Element.ALIGN_CENTER);
         Paragraph BusinessEmail = new Paragraph(BuEmail,title);
         BusinessEmail.setAlignment(Element.ALIGN_CENTER);
         Paragraph BusinessAddress = new Paragraph(BuAddress+"\nDAN R. PEL - Prop.",title);
@@ -293,20 +287,19 @@ public class generateReports {
         TotalSales.setAlignment(Element.ALIGN_LEFT);
         Paragraph devs = new Paragraph("System Developer:\nTapar, Emmanuel Christian\nNg, Juan Miguel",newlineFont);
         devs.setAlignment(Element.ALIGN_CENTER);
-        Paragraph disclaimer = new Paragraph("*Note: Rental Gross Income not Included for computation of Net Income*\n*Note: Doesn't include computation of current day sales for custom, monthly, and annual range.*",newlineFont);
+        Paragraph disclaimer = new Paragraph("*Note: Rental Gross Income not Included for computation of Net Income*\n*Note: Doesn't include computation of current day sales for custom, monthly, and annual range.*\n*Note: Taxes are not deducted on the Total Net Income*",newlineFont);
         disclaimer.setAlignment(Element.ALIGN_LEFT);
         //Creation of Report
         SalesReport.open(); 
         SalesReport.add(new Chunk(""));
         //Retail Sales Table
-        float [] columnwidth = {4f,3f,3f,4f,2f,2f};
-        PdfPTable RetailSales = new PdfPTable(6);
+        float [] columnwidth = {4f,3f,3f,2f,2f};
+        PdfPTable RetailSales = new PdfPTable(5);
         RetailSales.setWidthPercentage(100);
         RetailSales.setWidths(columnwidth);
         PdfPCell TransID = new PdfPCell(new Phrase("Transaction ID",details));
         PdfPCell GrossSales = new PdfPCell(new Phrase("Gross Income",details));
         PdfPCell TotalCost = new PdfPCell(new Phrase("Product Total Cost",details));     
-        PdfPCell VAT = new PdfPCell(new Phrase("VAT",details));
         PdfPCell NetIncome = new PdfPCell(new Phrase("Net Income",details));
         PdfPCell TransDate = new PdfPCell(new Phrase("Transaction Date",details));
         TransID.setBorder(Rectangle.BOX);
@@ -318,9 +311,6 @@ public class generateReports {
         TotalCost.setBorder(Rectangle.BOX);
         TotalCost.setBackgroundColor(BaseColor.LIGHT_GRAY);
         RetailSales.addCell(TotalCost).setHorizontalAlignment(Element.ALIGN_CENTER);
-        VAT.setBorder(Rectangle.BOX);
-        VAT.setBackgroundColor(BaseColor.LIGHT_GRAY);
-        RetailSales.addCell(VAT).setHorizontalAlignment(Element.ALIGN_CENTER);
         NetIncome.setBorder(Rectangle.BOX);
         NetIncome.setBackgroundColor(BaseColor.LIGHT_GRAY);
         RetailSales.addCell(NetIncome).setHorizontalAlignment(Element.ALIGN_CENTER);
@@ -390,15 +380,14 @@ public class generateReports {
         TransDate.setBackgroundColor(BaseColor.LIGHT_GRAY);
         LossTable.addCell(TransDate).setHorizontalAlignment(Element.ALIGN_CENTER);
         //Total Table
-        float [] columnwidth5 = {3f,4f,6f,3f,3f,3f,3f,4f};
-        PdfPTable TotalTable = new PdfPTable(8);
+        float [] columnwidth5 = {3f,4f,6f,3f,3f,3f,3f};
+        PdfPTable TotalTable = new PdfPTable(7);
         TotalTable.setWidthPercentage(100);
         TotalTable.setWidths(columnwidth5);
         PdfPCell TotDate = new PdfPCell(new Phrase("Sales Date",details));
         PdfPCell TotGrossIncome = new PdfPCell(new Phrase("Gross Income",details));
         PdfPCell TotRentGrossIncome = new PdfPCell(new Phrase("Rental Gross Income",details));
         PdfPCell TotPenalties = new PdfPCell(new Phrase("Penalties",details));
-        PdfPCell TotVAT = new PdfPCell(new Phrase("VAT",details));
         PdfPCell TotCost = new PdfPCell(new Phrase("Cost",details));
         PdfPCell TotLoss = new PdfPCell(new Phrase("Losses",details));
         PdfPCell TotNetIncome = new PdfPCell(new Phrase("Net Income",details));
@@ -414,9 +403,6 @@ public class generateReports {
         TotPenalties.setBorder(Rectangle.BOX);
         TotPenalties.setBackgroundColor(BaseColor.LIGHT_GRAY);
         TotalTable.addCell(TotPenalties).setHorizontalAlignment(Element.ALIGN_CENTER);
-        TotVAT.setBorder(Rectangle.BOX);
-        TotVAT.setBackgroundColor(BaseColor.LIGHT_GRAY);
-        TotalTable.addCell(TotVAT).setHorizontalAlignment(Element.ALIGN_CENTER);
         TotCost.setBorder(Rectangle.BOX);
         TotCost.setBackgroundColor(BaseColor.LIGHT_GRAY);
         TotalTable.addCell(TotCost).setHorizontalAlignment(Element.ALIGN_CENTER);
@@ -449,12 +435,7 @@ public class generateReports {
             PdfPCell CaDescriptionCell = new PdfPCell(new Phrase("P"+strOrCostTotal,products));
             CaDescriptionCell.setBorder(Rectangle.BOX);                    
             RetailSales.addCell(CaDescriptionCell).setHorizontalAlignment(Element.ALIGN_CENTER);
-            OrVAT = rs.getFloat("OrLessVAT");
-            String strOrVAT = Float.toString(OrVAT);
-            PdfPCell PrUnitPriceCell = new PdfPCell(new Phrase("P"+strOrVAT,products));
-            PrUnitPriceCell.setBorder(Rectangle.BOX);                    
-            RetailSales.addCell(PrUnitPriceCell).setHorizontalAlignment(Element.ALIGN_CENTER);
-            OrNetIncome = OrTotalAmount - (OrCostTotal+OrVAT);
+            OrNetIncome = OrTotalAmount - OrCostTotal;
             String strOrNetIncome = decfor.format(OrNetIncome);
             PdfPCell PrStockCell = new PdfPCell(new Phrase("P"+strOrNetIncome,products));
             PrStockCell.setBorder(Rectangle.BOX);                    
@@ -466,7 +447,6 @@ public class generateReports {
             TrDate.setBorder(Rectangle.BOX);                    
             RetailSales.addCell(TrDate).setHorizontalAlignment(Element.ALIGN_CENTER);
             GrandGrossIncome = GrandGrossIncome + OrTotalAmount;
-            GrandVAT = GrandVAT + OrVAT;
             GrandCost = GrandCost + OrCostTotal;
             }          
         pst.close();
@@ -582,11 +562,6 @@ public class generateReports {
             PdfPCell PrCostCell = new PdfPCell(new Phrase("P"+strTotalPenalties,products));
             PrCostCell.setBorder(Rectangle.BOX);                    
             TotalTable.addCell(PrCostCell).setHorizontalAlignment(Element.ALIGN_CENTER);
-            float TotalVAT = rs.getFloat("SalesTotalVAT");
-            String strLossValue = decfor.format(TotalVAT);
-            PdfPCell CaDescriptionCell = new PdfPCell(new Phrase("P"+strLossValue,products));
-            CaDescriptionCell.setBorder(Rectangle.BOX);                    
-            TotalTable.addCell(CaDescriptionCell).setHorizontalAlignment(Element.ALIGN_CENTER); 
             int TotalCostt = rs.getInt("SalesTotalCost");
             String strTotalCostt = Integer.toString(TotalCostt);
             PdfPCell strTotalCosttCell = new PdfPCell(new Phrase("P"+strTotalCostt,products));
@@ -604,7 +579,7 @@ public class generateReports {
             TotalTable.addCell(strTotalNetCell).setHorizontalAlignment(Element.ALIGN_CENTER);
             }  
         pst.close(); 
-        GrandNet = (GrandGrossIncome+GrandPenalties)-(GrandLosses+GrandVAT+GrandCost);
+        GrandNet = (GrandGrossIncome+GrandPenalties)-(GrandLosses+GrandCost);
         }
         //If Date has Range (Custom, Monthly, Annually)
         else{
@@ -627,12 +602,7 @@ public class generateReports {
             PdfPCell CaDescriptionCell = new PdfPCell(new Phrase("P"+strOrCostTotal,products));
             CaDescriptionCell.setBorder(Rectangle.BOX);                    
             RetailSales.addCell(CaDescriptionCell).setHorizontalAlignment(Element.ALIGN_CENTER);
-            OrVAT = rs.getFloat("OrLessVAT");
-            String strOrVAT = Float.toString(OrVAT);
-            PdfPCell PrUnitPriceCell = new PdfPCell(new Phrase("P"+strOrVAT,products));
-            PrUnitPriceCell.setBorder(Rectangle.BOX);                    
-            RetailSales.addCell(PrUnitPriceCell).setHorizontalAlignment(Element.ALIGN_CENTER);
-            OrNetIncome = OrTotalAmount - (OrCostTotal+OrVAT);
+            OrNetIncome = OrTotalAmount - OrCostTotal;
             String strOrNetIncome = decfor.format(OrNetIncome);
             PdfPCell PrStockCell = new PdfPCell(new Phrase("P"+strOrNetIncome,products));
             PrStockCell.setBorder(Rectangle.BOX);                    
@@ -756,11 +726,6 @@ public class generateReports {
             PdfPCell PrCostCell = new PdfPCell(new Phrase("P"+strTotalPenalties,products));
             PrCostCell.setBorder(Rectangle.BOX);                    
             TotalTable.addCell(PrCostCell).setHorizontalAlignment(Element.ALIGN_CENTER);
-            float TotalVAT = rs.getFloat("SalesTotalVAT");
-            String strLossValue = decfor.format(TotalVAT);
-            PdfPCell CaDescriptionCell = new PdfPCell(new Phrase("P"+strLossValue,products));
-            CaDescriptionCell.setBorder(Rectangle.BOX);                    
-            TotalTable.addCell(CaDescriptionCell).setHorizontalAlignment(Element.ALIGN_CENTER); 
             int TotalCostt = rs.getInt("SalesTotalCost");
             String strTotalCostt = Integer.toString(TotalCostt);
             PdfPCell strTotalCosttCell = new PdfPCell(new Phrase("P"+strTotalCostt,products));
@@ -778,16 +743,15 @@ public class generateReports {
             TotalTable.addCell(strTotalNetCell).setHorizontalAlignment(Element.ALIGN_CENTER);
             }  
         pst.close();    
-        pst = sqlConn.prepareStatement("SELECT SUM(SalesGrossIncome), SUM(SalesTotalRentalGross), SUM(SalesTotalPenalties), SUM(SalesTotalVAT), SUM(SalesTotalCost), SUM(SalesTotalLoss), SUM(SalesNetIncome) FROM sales WHERE SalesDate BETWEEN '"+Date1+"' AND '"+Date2+"'"); 
+        pst = sqlConn.prepareStatement("SELECT SUM(SalesGrossIncome), SUM(SalesTotalRentalGross), SUM(SalesTotalPenalties), SUM(SalesTotalCost), SUM(SalesTotalLoss), SUM(SalesNetIncome) FROM sales WHERE SalesDate BETWEEN '"+Date1+"' AND '"+Date2+"'"); 
         rs = pst.executeQuery();
         if(rs.next()){
             GrandGrossIncome = rs.getInt(1);
             GrandRentalGrossIncome = rs.getInt(2); 
             GrandPenalties = rs.getInt(3);
-            GrandVAT = rs.getFloat(4);
-            GrandCost = rs.getInt(5);
-            GrandLosses = rs.getInt(6);
-            GrandNet = rs.getFloat(7);
+            GrandCost = rs.getInt(4);
+            GrandLosses = rs.getInt(5);
+            GrandNet = rs.getFloat(6);
             }  
         pst.close();  
         }
@@ -816,13 +780,6 @@ public class generateReports {
         PdfPCell GrandPenaltiesCell = new PdfPCell(new Phrase("P"+strGrandPenalties,products));
         GrandPenaltiesCell.setBorder(Rectangle.NO_BORDER);                    
         Totals.addCell(GrandPenaltiesCell).setHorizontalAlignment(Element.ALIGN_RIGHT);
-        PdfPCell GrandVATT = new PdfPCell(new Phrase("Grand Total VAT",products));
-        GrandVATT.setBorder(Rectangle.NO_BORDER);
-        Totals.addCell(GrandVATT).setHorizontalAlignment(Element.ALIGN_LEFT);
-        String strGrandVAT = Float.toString(GrandVAT);
-        PdfPCell GrandVATCell = new PdfPCell(new Phrase("P"+strGrandVAT,products));
-        GrandVATCell.setBorder(Rectangle.NO_BORDER);                    
-        Totals.addCell(GrandVATCell).setHorizontalAlignment(Element.ALIGN_RIGHT);
         PdfPCell GrandCostt = new PdfPCell(new Phrase("Grand Total Cost",products));
         GrandCostt.setBorder(Rectangle.NO_BORDER);
         Totals.addCell(GrandCostt).setHorizontalAlignment(Element.ALIGN_LEFT);
@@ -849,7 +806,6 @@ public class generateReports {
         SalesReport.add(BusinessName); 
         SalesReport.add(BusinessAddress);
         SalesReport.add(BusinessEmail); 
-        SalesReport.add(BusinessTIN); 
         SalesReport.add(PaInventoryReport);
         SalesReport.add(newline);
         SalesReport.add(UserDetails);

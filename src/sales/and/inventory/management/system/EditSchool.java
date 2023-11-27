@@ -82,7 +82,7 @@ public class EditSchool extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
 
-        panelBorder1.setBackground(new java.awt.Color(102, 255, 204));
+        panelBorder1.setBackground(new java.awt.Color(204, 204, 204));
 
         jLabel5.setFont(new java.awt.Font("Roboto", 0, 24)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(0, 0, 51));
@@ -179,7 +179,7 @@ public class EditSchool extends javax.swing.JFrame {
             }
         });
 
-        SaveChanges.setBackground(new java.awt.Color(0, 0, 51));
+        SaveChanges.setBackground(new java.awt.Color(207, 124, 6));
         SaveChanges.setFont(new java.awt.Font("Roboto", 0, 27)); // NOI18N
         SaveChanges.setForeground(new java.awt.Color(255, 255, 255));
         SaveChanges.setText("Save Changes");
@@ -195,7 +195,7 @@ public class EditSchool extends javax.swing.JFrame {
             }
         });
 
-        panelBorder2.setBackground(new java.awt.Color(0, 0, 51));
+        panelBorder2.setBackground(new java.awt.Color(20, 30, 86));
 
         jLabel1.setFont(new java.awt.Font("Roboto", 0, 36)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));

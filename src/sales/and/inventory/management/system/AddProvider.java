@@ -4,7 +4,6 @@
  */
 package sales.and.inventory.management.system;
 
-import java.awt.Color;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -16,8 +15,8 @@ import javax.swing.JOptionPane;
  *
  * @author juanm
  */
-public class AddCategory extends javax.swing.JFrame {
-        private static final String username = JDBC.username;
+public class AddProvider extends javax.swing.JFrame {
+    private static final String username = JDBC.username;
         private static final String password = JDBC.password;
         private static final String dataConn = JDBC.dataConn;
         JDBC db = new JDBC();
@@ -26,14 +25,11 @@ public class AddCategory extends javax.swing.JFrame {
     PreparedStatement pst = null;
     PreparedStatement pst2 = null;
     ResultSet rs=null, rs2=null;
-    int q, i, id, deleteItem;
     /**
-     * Creates new form AddCategory
+     * Creates new form AddProvider
      */
-    public AddCategory() {
+    public AddProvider() {
         initComponents();
-        db.Connect();
-        setBackground(new Color(0,0,0,0));
     }
 
     /**
@@ -47,16 +43,17 @@ public class AddCategory extends javax.swing.JFrame {
 
         panelBorder1 = new swing.PanelBorder();
         Cancel = new javax.swing.JButton();
-        txtCategory = new javax.swing.JTextField();
+        txtProviderName = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
-        AddCategory = new javax.swing.JButton();
+        AddProvider = new javax.swing.JButton();
         panelBorder2 = new swing.PanelBorder();
         jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        txtProviderAddress = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
         setResizable(false);
-        setSize(new java.awt.Dimension(638, 383));
 
         panelBorder1.setBackground(new java.awt.Color(204, 204, 204));
         panelBorder1.setPreferredSize(new java.awt.Dimension(638, 383));
@@ -77,30 +74,30 @@ public class AddCategory extends javax.swing.JFrame {
             }
         });
 
-        txtCategory.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
-        txtCategory.addActionListener(new java.awt.event.ActionListener() {
+        txtProviderName.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
+        txtProviderName.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtCategoryActionPerformed(evt);
+                txtProviderNameActionPerformed(evt);
             }
         });
 
         jLabel2.setFont(new java.awt.Font("Roboto", 0, 24)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(0, 0, 51));
-        jLabel2.setText("Category Name");
+        jLabel2.setText("Provider Address");
 
-        AddCategory.setBackground(new java.awt.Color(207, 124, 6));
-        AddCategory.setFont(new java.awt.Font("Roboto", 0, 27)); // NOI18N
-        AddCategory.setForeground(new java.awt.Color(255, 255, 255));
-        AddCategory.setText("Add");
-        AddCategory.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        AddCategory.addMouseListener(new java.awt.event.MouseAdapter() {
+        AddProvider.setBackground(new java.awt.Color(207, 124, 6));
+        AddProvider.setFont(new java.awt.Font("Roboto", 0, 27)); // NOI18N
+        AddProvider.setForeground(new java.awt.Color(255, 255, 255));
+        AddProvider.setText("Add");
+        AddProvider.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        AddProvider.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                AddCategoryMouseClicked(evt);
+                AddProviderMouseClicked(evt);
             }
         });
-        AddCategory.addActionListener(new java.awt.event.ActionListener() {
+        AddProvider.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                AddCategoryActionPerformed(evt);
+                AddProviderActionPerformed(evt);
             }
         });
 
@@ -109,7 +106,7 @@ public class AddCategory extends javax.swing.JFrame {
         jLabel3.setBackground(new java.awt.Color(0, 0, 0));
         jLabel3.setFont(new java.awt.Font("Roboto", 0, 36)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel3.setText("Add Category");
+        jLabel3.setText("Add Provider");
 
         javax.swing.GroupLayout panelBorder2Layout = new javax.swing.GroupLayout(panelBorder2);
         panelBorder2.setLayout(panelBorder2Layout);
@@ -128,35 +125,51 @@ public class AddCategory extends javax.swing.JFrame {
                 .addContainerGap(28, Short.MAX_VALUE))
         );
 
+        jLabel4.setFont(new java.awt.Font("Roboto", 0, 24)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(0, 0, 51));
+        jLabel4.setText("Provider Name");
+
+        txtProviderAddress.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
+        txtProviderAddress.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtProviderAddressActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelBorder1Layout = new javax.swing.GroupLayout(panelBorder1);
         panelBorder1.setLayout(panelBorder1Layout);
         panelBorder1Layout.setHorizontalGroup(
             panelBorder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelBorder1Layout.createSequentialGroup()
                 .addGap(33, 33, 33)
-                .addGroup(panelBorder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(panelBorder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addGroup(panelBorder1Layout.createSequentialGroup()
                         .addComponent(Cancel)
                         .addGap(18, 18, 18)
-                        .addComponent(AddCategory, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(panelBorder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jLabel2)
-                        .addComponent(panelBorder2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(txtCategory)))
-                .addContainerGap(33, Short.MAX_VALUE))
+                        .addComponent(AddProvider, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(panelBorder2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtProviderAddress, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtProviderName, javax.swing.GroupLayout.Alignment.LEADING))
+                .addContainerGap(30, Short.MAX_VALUE))
         );
         panelBorder1Layout.setVerticalGroup(
             panelBorder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelBorder1Layout.createSequentialGroup()
                 .addGap(20, 20, 20)
                 .addComponent(panelBorder2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(24, 24, 24)
+                .addComponent(jLabel4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(txtProviderName, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(37, 37, 37)
                 .addComponent(jLabel2)
                 .addGap(18, 18, 18)
-                .addComponent(txtCategory, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 78, Short.MAX_VALUE)
+                .addComponent(txtProviderAddress, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 72, Short.MAX_VALUE)
                 .addGroup(panelBorder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(AddCategory, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(AddProvider, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(Cancel, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(33, 33, 33))
         );
@@ -165,47 +178,55 @@ public class AddCategory extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panelBorder1, javax.swing.GroupLayout.DEFAULT_SIZE, 648, Short.MAX_VALUE)
+            .addComponent(panelBorder1, javax.swing.GroupLayout.DEFAULT_SIZE, 635, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panelBorder1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(panelBorder1, javax.swing.GroupLayout.DEFAULT_SIZE, 500, Short.MAX_VALUE)
         );
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txtCategoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCategoryActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtCategoryActionPerformed
-
-    private void AddCategoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddCategoryActionPerformed
-        addCategory();
-        txtCategory.setText("");
-        Main.updateCategory();
-    }//GEN-LAST:event_AddCategoryActionPerformed
-
-    private void CancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CancelActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_CancelActionPerformed
-
     private void CancelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_CancelMouseClicked
 
         dispose();
     }//GEN-LAST:event_CancelMouseClicked
 
-    private void AddCategoryMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_AddCategoryMouseClicked
-        
+    private void CancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CancelActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_CancelActionPerformed
+
+    private void txtProviderNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtProviderNameActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtProviderNameActionPerformed
+
+    private void AddProviderMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_AddProviderMouseClicked
+
         dispose();
-    }//GEN-LAST:event_AddCategoryMouseClicked
-    public void addCategory(){
+    }//GEN-LAST:event_AddProviderMouseClicked
+
+    private void AddProviderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddProviderActionPerformed
+        addProvider();
+        txtProviderName.setText("");
+        txtProviderAddress.setText("");
+        Main.updateProvider();
+    }//GEN-LAST:event_AddProviderActionPerformed
+
+    private void txtProviderAddressActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtProviderAddressActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtProviderAddressActionPerformed
+
+    
+    public void addProvider(){
         try
         {         
             sqlConn = DriverManager.getConnection(dataConn,username,password);
-            pst = sqlConn.prepareStatement("INSERT into product_category(CaDescription)values"
-                    + "(?)");           
-            pst.setString(1, txtCategory.getText());                
+            pst = sqlConn.prepareStatement("INSERT into provider(ProviderName,ProviderAddress)values"
+                    + "(?,?)");           
+            pst.setString(1, txtProviderName.getText());  
+            pst.setString(2, txtProviderAddress.getText()); 
             pst.executeUpdate();
             JOptionPane.showMessageDialog(this,"Category Added");
 
@@ -216,15 +237,20 @@ public class AddCategory extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Please input the right data type.");
         } 
     }
+    /**
+     * @param args the command line arguments
+     */
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton AddCategory;
+    private javax.swing.JButton AddProvider;
     private javax.swing.JButton Cancel;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private swing.PanelBorder panelBorder1;
     private swing.PanelBorder panelBorder2;
-    private javax.swing.JTextField txtCategory;
+    private javax.swing.JTextField txtProviderAddress;
+    private javax.swing.JTextField txtProviderName;
     // End of variables declaration//GEN-END:variables
 }

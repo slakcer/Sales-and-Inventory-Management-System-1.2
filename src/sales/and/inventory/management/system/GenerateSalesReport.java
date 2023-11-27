@@ -83,7 +83,7 @@ public class GenerateSalesReport extends javax.swing.JFrame {
         setUndecorated(true);
         setResizable(false);
 
-        panelBorder1.setBackground(new java.awt.Color(102, 255, 204));
+        panelBorder1.setBackground(new java.awt.Color(204, 204, 204));
 
         jLabel4.setFont(new java.awt.Font("Roboto", 0, 24)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(0, 0, 51));
@@ -135,7 +135,7 @@ public class GenerateSalesReport extends javax.swing.JFrame {
             }
         });
 
-        GenerateSalesReport.setBackground(new java.awt.Color(0, 0, 51));
+        GenerateSalesReport.setBackground(new java.awt.Color(207, 124, 6));
         GenerateSalesReport.setFont(new java.awt.Font("Roboto", 0, 27)); // NOI18N
         GenerateSalesReport.setForeground(new java.awt.Color(255, 255, 255));
         GenerateSalesReport.setText("Generate");
@@ -151,7 +151,7 @@ public class GenerateSalesReport extends javax.swing.JFrame {
             }
         });
 
-        panelBorder2.setBackground(new java.awt.Color(0, 0, 51));
+        panelBorder2.setBackground(new java.awt.Color(20, 30, 86));
 
         jLabel1.setFont(new java.awt.Font("Roboto", 0, 36)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
@@ -164,7 +164,7 @@ public class GenerateSalesReport extends javax.swing.JFrame {
             .addGroup(panelBorder2Layout.createSequentialGroup()
                 .addGap(159, 159, 159)
                 .addComponent(jLabel1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(156, Short.MAX_VALUE))
         );
         panelBorder2Layout.setVerticalGroup(
             panelBorder2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -194,7 +194,7 @@ public class GenerateSalesReport extends javax.swing.JFrame {
                                     .addComponent(jLabel5)
                                     .addComponent(DateChooser1, javax.swing.GroupLayout.DEFAULT_SIZE, 328, Short.MAX_VALUE)
                                     .addComponent(cboRange, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGroup(panelBorder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(DateChooser2, javax.swing.GroupLayout.PREFERRED_SIZE, 328, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jLabel3)))
@@ -203,7 +203,7 @@ public class GenerateSalesReport extends javax.swing.JFrame {
                                 .addComponent(Cancel)
                                 .addGap(18, 18, 18)
                                 .addComponent(GenerateSalesReport)))
-                        .addGap(43, 43, 43))))
+                        .addGap(30, 30, 30))))
         );
         panelBorder1Layout.setVerticalGroup(
             panelBorder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
